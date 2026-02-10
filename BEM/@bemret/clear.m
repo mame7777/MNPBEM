@@ -4,4 +4,5 @@ function obj = clear( obj )
 %  Usage for obj = bemret :
 %    obj = clear( obj )
 
-[ obj.G1i, obj.G2i, obj.L1, obj.L2, obj.Sigma1, obj.Deltai, obj.Sigmai ] = deal( [] );
+[ obj.G1i, obj.G2i, obj.L1, obj.L2, obj.Sigma1, obj.Deltai,  ...
+  obj.Sigma_L, obj.Sigma_U, obj.Sigma_p ] = deal( [] );

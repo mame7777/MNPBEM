@@ -69,6 +69,6 @@ if isempty( obj.enei ) || obj.enei ~= enei
   obj.L2  = L2;                 %  G2 * eps2 * G2i
   obj.Sigma1 = Sigma1;          %  H1 * G1i, Eq. (21)
   obj.Deltai = Deltai;          %  inv( Sigma1 - Sigma2 ) 
-  obj.Sigmai = inv( Sigma );    %  Eq. (21,22)
+  [ obj.Sigma_L, obj.Sigma_U, obj.Sigma_p ] = lu( Sigma, 'vector' );  %  LU decomposition of Sigma, Eq. (21,22)
 
 end
