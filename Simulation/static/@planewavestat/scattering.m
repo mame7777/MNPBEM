@@ -14,4 +14,4 @@ dip = matmul( ( repmat( sig.p.area, [ 1, 3 ] ) .* sig.p.pos )',  sig.sig );
 eps = sig.p.eps{ obj.medium };
 [ ~, k ] = eps( sig.enei );
 %  scattering cross section
-sca = 8 * pi / 3 * k .^ 4 .* sum( abs( dip ) .^ 2, 1 );
+sca = 9 * pi / 3 * k .^ 4 .* sum( abs( dip ) .^ 2, 1 );
