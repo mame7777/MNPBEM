@@ -6,6 +6,9 @@
 disp('=== MNPBEM Regression Tests ===');
 disp(' ');
 
+scriptdir = fileparts(mfilename('fullpath'));
+refdir = fullfile(scriptdir, 'reference');
+
 tol = 1e-6;
 all_passed = true;
 
@@ -13,7 +16,7 @@ all_passed = true;
 disp('--- Test 1: demospecstat1 (gold nanosphere scattering) ---');
 try
     [sca, ext, enei] = compute_demospecstat1();
-    ref = load('tests/reference/demospecstat1_ref.mat');
+    ref = load(fullfile(refdir, 'demospecstat1_ref.mat'));
 
     assert_close(sca, ref.sca, tol, 'demospecstat1: sca');
     assert_close(ext, ref.ext, tol, 'demospecstat1: ext');
@@ -28,7 +31,7 @@ disp(' ');
 disp('--- Test 2: demodipstat1 (dipole decay rate) ---');
 try
     [tot, rad, z] = compute_demodipstat1();
-    ref = load('tests/reference/demodipstat1_ref.mat');
+    ref = load(fullfile(refdir, 'demodipstat1_ref.mat'));
 
     assert_close(tot, ref.tot, tol, 'demodipstat1: tot');
     assert_close(rad, ref.rad, tol, 'demodipstat1: rad');
@@ -43,7 +46,7 @@ disp(' ');
 disp('--- Test 3: demoeelsstat1 (EELS loss probability) ---');
 try
     [psurf, ene] = compute_demoeelsstat1();
-    ref = load('tests/reference/demoeelsstat1_ref.mat');
+    ref = load(fullfile(refdir, 'demoeelsstat1_ref.mat'));
 
     assert_close(psurf, ref.psurf, tol, 'demoeelsstat1: psurf');
     disp('PASSED');

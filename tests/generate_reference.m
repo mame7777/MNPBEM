@@ -5,7 +5,8 @@
 disp('=== Generating MNPBEM Reference Data ===');
 disp(' ');
 
-outdir = 'tests/reference';
+scriptdir = fileparts(mfilename('fullpath'));
+outdir = fullfile(scriptdir, 'reference');
 if ~exist(outdir, 'dir')
     mkdir(outdir);
 end
