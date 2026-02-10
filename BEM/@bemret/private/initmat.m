@@ -46,14 +46,15 @@ if isempty( obj.enei ) || obj.enei ~= enei
   Sigma1 = H1 * G1i;  clear G1 H1;
   Sigma2 = H2 * G2i;  clear G2 H2;
    
-  %  inverse Delta matrix
-  Deltai = inv( Sigma1 - Sigma2 );
-   
+  %  LU decomposition of Delta = Sigma1 - Sigma2
+  Delta = Sigma1 - Sigma2;
+  [ Delta_L, Delta_U, Delta_p ] = lu( Delta, 'vector' );
+
   %  difference of dielectric functions
   L = L1 - L2;
   %  Sigma matrix
   Sigma = Sigma1 * L1 - Sigma2 * L2 +  ...
-      k ^ 2 * ( ( L * Deltai ) .* ( nvec * nvec' ) ) * L;
+      k ^ 2 * ( ( L / Delta ) .* ( nvec * nvec' ) ) * L;
 
   clear L Sigma2;
   
@@ -68,7 +69,7 @@ if isempty( obj.enei ) || obj.enei ~= enei
   obj.L1  = L1;                 %  G1 * eps1 * G1i, Eq. (22)
   obj.L2  = L2;                 %  G2 * eps2 * G2i
   obj.Sigma1 = Sigma1;          %  H1 * G1i, Eq. (21)
-  obj.Deltai = Deltai;          %  inv( Sigma1 - Sigma2 ) 
+  [ obj.Delta_L, obj.Delta_U, obj.Delta_p ] = deal( Delta_L, Delta_U, Delta_p );  %  LU of Sigma1 - Sigma2
   [ obj.Sigma_L, obj.Sigma_U, obj.Sigma_p ] = lu( Sigma, 'vector' );  %  LU decomposition of Sigma, Eq. (21,22)
 
 end
