@@ -34,12 +34,28 @@ De = De - matmul( Sigma1, matmul( L1, phi ) ) +  ...
                 1i * k * inner( nvec, matmul( L1, a ) );
               
 %  Eq. (19)
-rhs = De + 1i * k * inner( nvec,  ...
-    matmul( L1 - L2, Delta_U \ ( Delta_L \ alpha(Delta_p, :) ) ) );
-sig2 = Sigma_U \ ( Sigma_L \ rhs(Sigma_p, :) );
+%  Reshape alpha for LU solve while preserving tensor dimensions
+siz_alpha = size( alpha );
+alpha_2d = reshape( alpha, siz_alpha(1), [] );
+alpha_solved = Delta_U \ ( Delta_L \ alpha_2d(Delta_p, :) );
+alpha_solved = reshape( alpha_solved, [ size(alpha_solved, 1), siz_alpha(2:end) ] );
+
+rhs = De + 1i * k * inner( nvec, matmul( L1 - L2, alpha_solved ) );
+
+%  Reshape rhs for LU solve while preserving tensor dimensions
+siz_rhs = size( rhs );
+rhs_2d = reshape( rhs, siz_rhs(1), [] );
+sig2 = Sigma_U \ ( Sigma_L \ rhs_2d(Sigma_p, :) );
+sig2 = reshape( sig2, [ size(sig2, 1), siz_rhs(2:end) ] );
+
 %  Eq. (20)
 rhs_h2 = 1i * k * outer( nvec, matmul( L1 - L2, sig2 ) ) + alpha;
-h2 = Delta_U \ ( Delta_L \ rhs_h2(Delta_p, :) );
+
+%  Reshape rhs_h2 for LU solve while preserving tensor dimensions
+siz_rhs_h2 = size( rhs_h2 );
+rhs_h2_2d = reshape( rhs_h2, siz_rhs_h2(1), [] );
+h2 = Delta_U \ ( Delta_L \ rhs_h2_2d(Delta_p, :) );
+h2 = reshape( h2, [ size(h2, 1), siz_rhs_h2(2:end) ] );
 
 %%  surface charges and currents
 sig1 = matmul( G1i, sig2 + phi );   h1 = matmul( G1i, h2 + a );
