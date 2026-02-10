@@ -36,7 +36,7 @@ De = De - matmul( Sigma1, matmul( L1, phi ) ) +  ...
 %  Eq. (19)
 rhs = De + 1i * k * inner( nvec,  ...
     matmul( L1 - L2, Delta_U \ ( Delta_L \ alpha(Delta_p, :) ) ) );
-sig2 = Sigma_U \ ( Sigma_L \ rhs(Sigma_p) );
+sig2 = Sigma_U \ ( Sigma_L \ rhs(Sigma_p, :) );
 %  Eq. (20)
 rhs_h2 = 1i * k * outer( nvec, matmul( L1 - L2, sig2 ) ) + alpha;
 h2 = Delta_U \ ( Delta_L \ rhs_h2(Delta_p, :) );
