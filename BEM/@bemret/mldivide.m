@@ -44,13 +44,9 @@ rhs = De + 1i * k * inner( nvec, matmul( L1 - L2, alpha_solved ) );
 
 %  Reshape rhs for LU solve while preserving tensor dimensions
 siz_rhs = size( rhs );
-if prod( siz_rhs(2:end) ) > 1
-  rhs_2d = reshape( rhs, siz_rhs(1), [] );
-  sig2 = Sigma_U \ ( Sigma_L \ rhs_2d(Sigma_p, :) );
-  sig2 = reshape( sig2, [ size(sig2, 1), siz_rhs(2:end) ] );
-else
-  sig2 = Sigma_U \ ( Sigma_L \ rhs(Sigma_p, :) );
-end
+rhs_2d = reshape( rhs, siz_rhs(1), [] );
+sig2 = Sigma_U \ ( Sigma_L \ rhs_2d(Sigma_p, :) );
+sig2 = reshape( sig2, [ size(sig2, 1), siz_rhs(2:end) ] );
 
 %  Eq. (20)
 rhs_h2 = 1i * k * outer( nvec, matmul( L1 - L2, sig2 ) ) + alpha;
