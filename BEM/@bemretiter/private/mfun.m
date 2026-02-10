@@ -11,6 +11,10 @@ function vec = mfun( obj, vec )
 
 %  get variables for evaluation of preconditioner
 sav = obj.sav;
+if isstruct( sav ) && ~isfield( sav, 'k' )
+  key = matlab.lang.makeValidName( sprintf( 'e_%0.15g', obj.enei ) );
+  if isfield( sav, key ), sav = sav.( key ); end
+end
 
 k = sav.k;            %  wavenumber of light in vacuum
 nvec = sav.nvec;      %  outer surface normals of discretized surface

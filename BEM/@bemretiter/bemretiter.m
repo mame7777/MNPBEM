@@ -21,7 +21,7 @@ classdef bemretiter < bembase & bemiter
       
   properties (Access = private)
     op          %  option structure
-    sav         %  variables for evaluation of preconditioner
+    sav         %  cache with variables for evaluation of preconditioner
     k           %  wavenumber of light in vacuum
     eps1        %  dielectric function at particle inside
     eps2        %  dielectric function at particle outside
