@@ -23,8 +23,8 @@ G2i  = obj.G2i;         %  inverse of outside Green function G2
 L1   = obj.L1;          %  G1 * eps1 * G1i, Eq. (22)
 L2   = obj.L2;          %  G2 * eps2 * G2i
 Sigma1 = obj.Sigma1;    %  H1 * G1i, Eq. (21)
-Deltai = obj.Deltai;    %  inv( Sigma1 - Sigma2 ) 
-Sigmai = obj.Sigmai;    %  Eq. (21,22)
+Delta_L = obj.Delta_L;  Delta_U = obj.Delta_U;  Delta_p = obj.Delta_p;  %  LU factors of Sigma1 - Sigma2
+Sigma_L = obj.Sigma_L;  Sigma_U = obj.Sigma_U;  Sigma_p = obj.Sigma_p;  %  LU factors of Sigma
 
 %%  solve BEM equations
 %  modify alpha and De
@@ -34,11 +34,12 @@ De = De - matmul( Sigma1, matmul( L1, phi ) ) +  ...
                 1i * k * inner( nvec, matmul( L1, a ) );
               
 %  Eq. (19)
-sig2 = matmul( Sigmai,  ...
-    De + 1i * k * inner( nvec, matmul( L1 - L2, matmul( Deltai, alpha ) ) ) );
+rhs = De + 1i * k * inner( nvec,  ...
+    matmul( L1 - L2, Delta_U \ ( Delta_L \ alpha(Delta_p, :) ) ) );
+sig2 = Sigma_U \ ( Sigma_L \ rhs(Sigma_p, :) );
 %  Eq. (20)
-h2 = matmul( Deltai,  ...
-    1i * k * outer( nvec, matmul( L1 - L2, sig2 ) ) + alpha );
+rhs_h2 = 1i * k * outer( nvec, matmul( L1 - L2, sig2 ) ) + alpha;
+h2 = Delta_U \ ( Delta_L \ rhs_h2(Delta_p, :) );
 
 %%  surface charges and currents
 sig1 = matmul( G1i, sig2 + phi );   h1 = matmul( G1i, h2 + a );

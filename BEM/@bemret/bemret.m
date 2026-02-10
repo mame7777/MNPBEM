@@ -29,8 +29,12 @@ classdef bemret < bembase
     L1          %  G1 * eps1 * G1i, Eq. (22)
     L2          %  G2 * eps2 * G2i
     Sigma1      %  H1 * G1i, Eq. (21)
-    Deltai      %  inv( Sigma1 - Sigma2 ) 
-    Sigmai      %  Eq. (21,22)
+    Delta_L     %  LU decomposition of Sigma1 - Sigma2: lower triangular factor
+    Delta_U     %  LU decomposition of Sigma1 - Sigma2: upper triangular factor
+    Delta_p     %  LU decomposition of Sigma1 - Sigma2: permutation vector
+    Sigma_L     %  LU decomposition of Sigma: lower triangular factor
+    Sigma_U     %  LU decomposition of Sigma: upper triangular factor
+    Sigma_p     %  LU decomposition of Sigma: permutation vector
   end
   
   %%  Methods
