@@ -66,13 +66,15 @@ sav.Gamma  = Gamma;   %  inv( Sigma1 - Sigma2 )
 sav.im     = { im11, im12; im21, im22 };
                       %  response matrix for layer system                                            
 
-%  save structure (cache by wavelength)
-key = savkey( enei );
-if isempty( obj.sav ) || ~isstruct( obj.sav ),  obj.sav = struct();  end
-obj.sav.( key ) = sav;
+%  save structure (cache by wavelength).
+key = cachekey( enei );
+if ~isstruct( obj.sav ) || ~isfield( obj.sav, 'cache' ) || ~isstruct( obj.sav.cache )
+  obj.sav.cache = struct();
+end
+obj.sav.cache.( key ) = sav;
 %  save statistics
 if strcmp( obj.precond, 'hmat' )
-  %  hierachical matrices and names
+  %  hierarchical matrices and names
   hmat = { G1i, G2pi, Sigma1, Sigma2p, Gamma, im11, im12, im21, im22 };
   name = { 'G1i', 'G2pi', 'Sigma1', 'Sigma2p', 'Gamma', 'im11', 'im12', 'im21', 'im22' };
   %  loop over matrices
@@ -90,8 +92,3 @@ nvec1 = spdiag( nvec( :, 1 ) );
 nvec2 = spdiag( nvec( :, 2 ) );
 
 Gamma = nvec1 * Gamma * nvec1 + nvec2 * Gamma * nvec2;   
-
-
-function key = savkey( enei )
-%  helper to build cache key for wavelength-dependent preconditioner
-key = matlab.lang.makeValidName( sprintf( 'e_%0.15g', enei ) );

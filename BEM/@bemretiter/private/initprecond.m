@@ -51,13 +51,15 @@ sav.Sigma1 = Sigma1;          %  H1 * G1i, Eq. (21)
 sav.Deltai = Deltai;          %  inv( Sigma1 - Sigma2 ) 
 sav.Sigmai = inv2( Sigma );   %  Eq. (21,22)
 
-%  save structure (cache by wavelength)
-key = savkey( enei );
-if isempty( obj.sav ) || ~isstruct( obj.sav ),  obj.sav = struct();  end
-obj.sav.( key ) = sav;
+%  save structure (cache by wavelength).
+key = cachekey( enei );
+if ~isstruct( obj.sav ) || ~isfield( obj.sav, 'cache' ) || ~isstruct( obj.sav.cache )
+  obj.sav.cache = struct();
+end
+obj.sav.cache.( key ) = sav;
 %  save statistics
 if strcmp( obj.precond, 'hmat' )
-  %  hierachical matrices and names
+  %  hierarchical matrices and names
   hmat = { G1i, G2i, Sigma1, Sigma2, Deltai, sav.Sigmai };
   name = { 'G1i', 'G2i', 'Sigma1', 'Sigma2', 'Deltai', 'Sigmai' };
   %  loop over matrices
@@ -76,8 +78,3 @@ nvec2 = spdiag( nvec( :, 2 ) );
 nvec3 = spdiag( nvec( :, 3 ) );
 
 Deltai = nvec1 * Deltai * nvec1 + nvec2 * Deltai * nvec2 + nvec3 * Deltai * nvec3;        
-
-
-function key = savkey( enei )
-%  helper to build cache key for wavelength-dependent preconditioner
-key = matlab.lang.makeValidName( sprintf( 'e_%0.15g', enei ) );
