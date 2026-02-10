@@ -11,6 +11,14 @@ function vec = mfun( obj, vec )
 
 %  get variables for evaluation of preconditioner
 sav = obj.sav;
+if isstruct( sav ) && isfield( sav, 'cache' )
+  key = cachekey( obj.enei );
+  if isfield( sav.cache, key )
+    sav = sav.cache.( key );
+  else
+    error( 'bemretiter:mfun', 'Preconditioner cache for %.15f nm is missing.', obj.enei );
+  end
+end
 
 k = sav.k;            %  wavenumber of light in vacuum
 nvec = sav.nvec;      %  outer surface normals of discretized surface

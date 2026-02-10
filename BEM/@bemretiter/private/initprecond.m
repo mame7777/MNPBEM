@@ -51,11 +51,15 @@ sav.Sigma1 = Sigma1;          %  H1 * G1i, Eq. (21)
 sav.Deltai = Deltai;          %  inv( Sigma1 - Sigma2 ) 
 sav.Sigmai = inv2( Sigma );   %  Eq. (21,22)
 
-%  save structure
-obj.sav = sav;
+%  save structure (cache by wavelength).
+key = cachekey( enei );
+if ~isstruct( obj.sav ) || ~isfield( obj.sav, 'cache' ) || ~isstruct( obj.sav.cache )
+  obj.sav.cache = struct();
+end
+obj.sav.cache.( key ) = sav;
 %  save statistics
 if strcmp( obj.precond, 'hmat' )
-  %  hierachical matrices and names
+  %  hierarchical matrices and names
   hmat = { G1i, G2i, Sigma1, Sigma2, Deltai, sav.Sigmai };
   name = { 'G1i', 'G2i', 'Sigma1', 'Sigma2', 'Deltai', 'Sigmai' };
   %  loop over matrices

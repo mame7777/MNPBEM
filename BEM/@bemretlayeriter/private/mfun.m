@@ -8,6 +8,14 @@ function vec = mfun( obj, vec )
 [ phi, a, De, alpha ] = unpack( obj, vec );
 %  get variables for evaluation of preconditioner
 sav = obj.sav;
+if isstruct( sav ) && isfield( sav, 'cache' )
+  key = cachekey( obj.enei );
+  if isfield( sav.cache, key )
+    sav = sav.cache.( key );
+  else
+    error( 'bemretlayeriter:mfun', 'Preconditioner cache for %.15f nm is missing.', obj.enei );
+  end
+end
 
 k = sav.k;            %  wavenumber of light in vacuum
 nvec = sav.nvec;      %  outer surface normals of discretized surface
@@ -64,5 +72,3 @@ y2 = solve( L{ 2, 2 }, b2 - L{ 2, 1 } * y1, 'L' );
 %  [ U11, U12; 0, U22 ] * [ x1; x2 ] = [ y1; y2 ]
 x2 = solve( U{ 2, 2 }, y2, 'U' );
 x1 = solve( U{ 1, 1 }, y1 - U{ 1, 2 } * x2, 'U' );
-
-

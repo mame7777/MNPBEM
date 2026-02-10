@@ -4,4 +4,5 @@ function obj = clear( obj )
 %  Usage for obj = bemretlayeriter :
 %    obj = clear( obj )
 
-[ obj.G1, obj.H1, obj.G2, obj.H2, obj.sav ] = deal( [] );
+[ obj.G1, obj.H1, obj.G2, obj.H2 ] = deal( [] );
+obj.sav = struct();
